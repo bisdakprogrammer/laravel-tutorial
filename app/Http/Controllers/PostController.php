@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Database\Schema\PostgresSchemaState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
     public function index(Request $request) {
-
         $auth = auth()->user();
 
         $posts = Post::where('user_id', $auth->id)
@@ -23,6 +23,17 @@ class PostController extends Controller
             'id' => $request->id,
             'posts' => $posts,
             'postsTrashed' => $postsTrashed,
+        ]);
+    }
+    public function feed(Request $request) {
+        $posts =  new Post();
+
+        $posts = $posts
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
+        return view('posts.feed', [
+            'posts' => $posts
         ]);
     }
 

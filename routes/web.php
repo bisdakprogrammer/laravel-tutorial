@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// posts
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('dashboard', [\App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
+Route::get('feed', [\App\Http\Controllers\PostController::class, 'feed'])->name('posts.feed');
 //
 Route::resource('posts', \App\Http\Controllers\PostController::class)->only([
     'create',
@@ -30,5 +33,24 @@ Route::resource('posts', \App\Http\Controllers\PostController::class)->only([
 //
 Route::patch('posts/{post}/restore', [\App\Http\Controllers\PostController::class, 'restore'])->name('posts.restore');
 Route::delete('posts/{post}/force-delete', [\App\Http\Controllers\PostController::class, 'forceDelete'])->name('posts.force-delete');
+
+
+// users
+
+
+Route::get('users/people', [\App\Http\Controllers\UserController::class, 'people'])
+    ->name('users.people');
+
+// users friend
+
+Route::resource('user-friends', \App\Http\Controllers\UserFriendController::class)
+    ->only([
+        'store'
+    ])
+    ->names([
+        'store' => 'users-friend.store'
+    ]);
+
+
 
 require __DIR__.'/auth.php';
